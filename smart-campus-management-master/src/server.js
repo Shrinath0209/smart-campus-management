@@ -13,7 +13,11 @@ connectDB();
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+// CORS — allows frontend from any origin in production
+app.use(cors({
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  credentials: true
+}));
 app.use(express.json());
 
 // routes
@@ -24,10 +28,16 @@ app.use("/api/attendance", attendanceRoutes);
 app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Smart Campus API running 🚀");
+  res.json({ 
+    message: "University eCampus LMS API running 🚀",
+    version: "1.0.0",
+    status: "healthy" 
+  });
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+export default app;
